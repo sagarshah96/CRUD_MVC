@@ -1,4 +1,5 @@
 ﻿using Crud_MVC.Data;
+using Crud_MVC.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,9 +25,9 @@ namespace Crud_MVC.Controllers
                     return Json(new { data = empList }, JsonRequestBehavior.AllowGet);
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                throw ex;
             }
         }
         [HttpGet]
@@ -35,9 +36,28 @@ namespace Crud_MVC.Controllers
             return View();
         }
         [HttpPost]
-        public ActionResult AddOrEdit(Employee emp)
+        public ActionResult AddOrEdit(ModelEmployee memp)
         {
-            return View();
+            try
+            {
+                using (DBModel db = new DBModel())
+                {
+                    Employee emp = new Employee();
+                    emp.Name = memp.Name;
+                    emp.Position = memp.Position;
+                    emp.Office = memp.Office;
+                    emp.Age = memp.Age;
+                    emp.Salary = memp.Salary;
+                    db.Employees.Add(emp);
+                    db.SaveChanges();
+                    return Json(new { success = true, message = "Saved Successfully" }, JsonRequestBehavior.AllowGet);
+                }
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }            
         }
     }
 }
