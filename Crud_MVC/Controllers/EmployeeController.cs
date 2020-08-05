@@ -87,7 +87,6 @@ namespace Crud_MVC.Controllers
                         db.SaveChanges();
                         return Json(new { success = true, message = "Updated Successfully" }, JsonRequestBehavior.AllowGet);
                     }
-
                 }
             }
             catch (Exception ex)
@@ -113,7 +112,6 @@ namespace Crud_MVC.Controllers
             }
             catch (Exception)
             {
-
                 throw;
             }
             
