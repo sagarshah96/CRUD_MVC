@@ -13,23 +13,23 @@
             <th>Office</th>
             <th>Age</th>
             <th>Salary</th>
-            <th>Action</th>
+            <th></th>
         </tr>
     </thead>
 </table>
 
-
 <link href="~/Content/DataTables/css/dataTables.bootstrap4.min.css" rel="stylesheet" />
 <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" />
+
 @section scripts{
     <script src="~/Scripts/DataTables/jquery.dataTables.min.js"></script>
     <script src="~/Scripts/DataTables/dataTables.bootstrap4.min.js"></script>
 
 
     <script>
-        let Popup, dataTable
-        dataTable = $(document).ready(function () {
-            $("#employeeTable").DataTable({
+        var Popup, dataTable
+        $(document).ready(function () {
+            dataTable = $("#employeeTable").DataTable({
                 "ajax": {
                     "url": "/Employee/GetData",
                     "type": "GET",
@@ -42,11 +42,11 @@
                     { "data": "Age" },
                     { "data": "Salary" },
                     {
-                        "data": "EmployeeId", "render": function () {
-                            return "<a class='btn btn-default btn-sm'><i class='fa fa-pencil'></i> Edit</a><a class='btn btn-danger btn-sm'><i class='fa fa-trash' style='margin-left: 5px;'></i> Delete</a>";
+                        "data": "EmployeeId", "render": function (data) {
+                            return "<a class='btn btn-default btn-sm' onclick=PopupForm('@Url.Action("AddOrEdit","Employee")/" + data + "')><i class='fa fa-pencil'></i> Edit</a><a class='btn btn-danger btn-sm'><i class='fa fa-trash' style='margin-left: 5px;' onclick=Delete(" + data + ")></i> Delete</a>";
                         },
-                        "orderable":false,
-                        "width":"150px"
+                        "orderable": false,
+                        "width": "150px"
                     }
                 ],
                 "language": {
@@ -76,31 +76,49 @@
 
         function SubmitForm(form) {
             debugger;
-            $.validator.unobtrusive.parse(form);
+            //$.validator.unobtrusive.parse(form);
             //if ($(form).valid()) {
-                $.ajax({
-                    type: "POST",
-                    url: form.action,
-                    data: $(form).serialize(),
-                    success: function (data) {
+            $.ajax({
+                type: "POST",
+                url: form.action,
+                data: $(form).serialize(),
+                success: function (data) {
+                    debugger;
+                    if (data.success) {
                         debugger;
-                        if (data.success) {
-                            Popup.dialog('close');
-                            dataTable.ajax.reload();
-
-                            toastr.success("Saved Successfully..!");
-                        }
-                        else {
-                            toastr.error("Something Wrong..!");
-                        }
+                        Popup.dialog('close');
+                        dataTable.ajax.reload();
+                        toastr.success("Saved Successfully..!");
                     }
-                });
+                    else {
+                        toastr.error("Something Wrong..!");
+                    }
+                }
+            });
             //}
             //else {
             //    debugger;
             //    return false;
 
             //}
+        }
+
+        function Delete(id) {
+            if (confirm('Are You Sure You to Delete this Record ?')) {
+                $.ajax({
+                    type : "POST",
+                    url: '@Url.Action("Delete","Employee")/' + id,
+                    success: function (data) {
+                        if (data.success) {
+                            dataTable.ajax.reload();
+                            toastr.success("Record Deleted Successfully..!");
+                        }
+                        else {
+                            toastr.error("Something Wrong..!");
+                        }
+                    }
+                });
+            }
         }
     </script>
 }
