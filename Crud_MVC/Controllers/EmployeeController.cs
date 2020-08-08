@@ -58,6 +58,7 @@ namespace Crud_MVC.Controllers
             }
         }
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult AddOrEdit(ModelEmployee memp)
         {
             try

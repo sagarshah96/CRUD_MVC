@@ -3,10 +3,9 @@
     Layout = null;
 }
 
-@*@using (Html.BeginForm("AddOrEdit", "Employee", FormMethod.Post,new { }))*@
-@using (Ajax.BeginForm("AddOrEdit", "Employee", new AjaxOptions { HttpMethod = "POST", OnSuccess = "return SubmitForm(this)" }))
+@using (Ajax.BeginForm("AddOrEdit", "Employee", new AjaxOptions { HttpMethod = "POST", OnSuccess = "OnSuccess", OnFailure = "OnFailure" , OnBegin = "Validation" }))
 {
-
+    @Html.AntiForgeryToken()
         @Html.HiddenFor(m => m.EmployeeId)
         <div class="form-group">
             @Html.LabelFor(m => m.Name, new { @class = "control-label" })

@@ -43,10 +43,10 @@
                     { "data": "Salary" },
                     {
                         "data": "EmployeeId", "render": function (data) {
-                            return "<a class='btn btn-default btn-sm' onclick=PopupForm('@Url.Action("AddOrEdit","Employee")/" + data + "')><i class='fa fa-pencil'></i> Edit</a><a class='btn btn-danger btn-sm'><i class='fa fa-trash' style='margin-left: 5px;' onclick=Delete(" + data + ")></i> Delete</a>";
+                            return "<a class='btn btn-default btn-sm' onclick=PopupForm('@Url.Action("AddOrEdit","Employee")/" + data + "')><i class='fa fa-pencil'></i> Edit</a> <a class='btn btn-danger btn-sm' style='margin-left: 5px;'><i class='fa fa-trash'  onclick=Delete(" + data + ")> Delete </i></a>";
                         },
                         "orderable": false,
-                        "width": "150px"
+                        "width": "140px"
                     }
                 ],
                 "language": {
@@ -74,33 +74,44 @@
             });
         }
 
-        function SubmitForm(form) {
-            debugger;
-            //$.validator.unobtrusive.parse(form);
-            //if ($(form).valid()) {
-            $.ajax({
-                type: "POST",
-                url: form.action,
-                data: $(form).serialize(),
-                success: function (data) {
-                    debugger;
-                    if (data.success) {
-                        debugger;
-                        Popup.dialog('close');
-                        dataTable.ajax.reload();
-                        toastr.success("Saved Successfully..!");
-                    }
-                    else {
-                        toastr.error("Something Wrong..!");
-                    }
-                }
-            });
-            //}
-            //else {
-            //    debugger;
-            //    return false;
+        //function SubmitForm(form) {
+        //    debugger;
+        //    //$.validator.unobtrusive.parse(form);
+        //    //if ($(form).valid()) {
+        //    $.ajax({
+        //        type: "POST",
+        //        url: form.action,
+        //        data: $(form).serialize(),
+        //        success: function (data) {
+        //            debugger;
+        //            if (data.success) {
+        //                debugger;
+        //                Popup.dialog('close');
+        //                dataTable.ajax.reload();
+        //                toastr.success("Saved Successfully..!");
+        //            }
+        //            else {
+        //                toastr.error("Something Wrong..!");
+        //            }
+        //        }
+        //    });
+        //    //}
+        //    //else {
+        //    //    debugger;
+        //    //    return false;
 
-            //}
+        //    //}
+        //}
+
+        function OnSuccess(data) {
+            if (data.success) {
+                Popup.dialog('close');
+                dataTable.ajax.reload();
+                toastr.success(data.message);
+            }
+        }
+        function OnFailure(data) {
+            toastr.error("Something Went Wrong..");
         }
 
         function Delete(id) {
@@ -111,7 +122,7 @@
                     success: function (data) {
                         if (data.success) {
                             dataTable.ajax.reload();
-                            toastr.success("Record Deleted Successfully..!");
+                            toastr.success(data.message);
                         }
                         else {
                             toastr.error("Something Wrong..!");
