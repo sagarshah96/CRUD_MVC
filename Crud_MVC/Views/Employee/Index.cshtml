@@ -73,37 +73,9 @@
                 });
             });
         }
-
-        //function SubmitForm(form) {
-        //    debugger;
-        //    //$.validator.unobtrusive.parse(form);
-        //    //if ($(form).valid()) {
-        //    $.ajax({
-        //        type: "POST",
-        //        url: form.action,
-        //        data: $(form).serialize(),
-        //        success: function (data) {
-        //            debugger;
-        //            if (data.success) {
-        //                debugger;
-        //                Popup.dialog('close');
-        //                dataTable.ajax.reload();
-        //                toastr.success("Saved Successfully..!");
-        //            }
-        //            else {
-        //                toastr.error("Something Wrong..!");
-        //            }
-        //        }
-        //    });
-        //    //}
-        //    //else {
-        //    //    debugger;
-        //    //    return false;
-
-        //    //}
-        //}
-
+        
         function OnSuccess(data) {
+            
             if (data.success) {
                 Popup.dialog('close');
                 dataTable.ajax.reload();

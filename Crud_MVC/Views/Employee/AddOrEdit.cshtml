@@ -3,7 +3,7 @@
     Layout = null;
 }
 
-@using (Ajax.BeginForm("AddOrEdit", "Employee", new AjaxOptions { HttpMethod = "POST", OnSuccess = "OnSuccess", OnFailure = "OnFailure" , OnBegin = "Validation" }))
+@using (Ajax.BeginForm("AddOrEdit", "Employee", new AjaxOptions { HttpMethod = "POST", OnSuccess = "OnSuccess", OnFailure = "OnFailure" }))
 {
     @Html.AntiForgeryToken()
         @Html.HiddenFor(m => m.EmployeeId)
