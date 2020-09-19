@@ -17,6 +17,29 @@
         </tr>
     </thead>
 </table>
+<style>
+    div.alphabet {
+        display: table;
+        width: 100%;
+        margin-bottom: 1em;
+    }
+
+        div.alphabet span {
+            display: table-cell;
+            color: #3174c7;
+            cursor: pointer;
+            text-align: center;
+            width: 3.5%;
+        }
+
+            div.alphabet span:hover {
+                text-decoration: underline;
+            }
+
+            div.alphabet span.active {
+                color: black;
+            }
+</style>
 
 <link href="~/Content/DataTables/css/dataTables.bootstrap4.min.css" rel="stylesheet" />
 <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" />
@@ -27,9 +50,25 @@
 
 
     <script>
-        var Popup, dataTable
+        var Popup
+
+        var _alphabetSearch = '';
+
+        $.fn.dataTable.ext.search.push(function (settings, searchData) {
+            if (!_alphabetSearch) {
+                return true;
+            }
+
+            if (searchData[0].charAt(0) === _alphabetSearch) {
+                return true;
+            }
+
+            return false;
+        });
+
         $(document).ready(function () {
-            dataTable = $("#employeeTable").DataTable({
+
+            var table = $("#employeeTable").DataTable({
                 "ajax": {
                     "url": "/Employee/GetData",
                     "type": "GET",
@@ -53,6 +92,31 @@
                     "emptyTable": "No Data Found"
                 }
             });
+            var alphabet = $('<div class="alphabet"/>').append('Search: ');
+
+            $('<span class="clear active"/>')
+                .data('letter', '')
+                .html('None')
+                .appendTo(alphabet);
+
+            for (var i = 0 ; i < 26 ; i++) {
+                var letter = String.fromCharCode(65 + i);
+
+                $('<span/>')
+                    .data('letter', letter)
+                    .html(letter)
+                    .appendTo(alphabet);
+            }
+
+            alphabet.insertBefore(table.table().container());
+
+            alphabet.on('click', 'span', function () {
+                alphabet.find('.active').removeClass('active');
+                $(this).addClass('active');
+
+                _alphabetSearch = $(this).data('letter');
+                table.draw();
+            });
         });
 
         function PopupForm(url) {
@@ -73,12 +137,12 @@
                 });
             });
         }
-        
+
         function OnSuccess(data) {
-            
+
             if (data.success) {
                 Popup.dialog('close');
-                dataTable.ajax.reload();
+                $("#employeeTable").DataTable.ajax.reload();
                 toastr.success(data.message);
             }
         }
@@ -89,12 +153,13 @@
         function Delete(id) {
             if (confirm('Are You Sure You to Delete this Record ?')) {
                 $.ajax({
-                    type : "POST",
+                    type: "POST",
                     url: '@Url.Action("Delete","Employee")/' + id,
                     success: function (data) {
                         if (data.success) {
-                            dataTable.ajax.reload();
                             toastr.success(data.message);
+                            oTable = $("#employeeTable").DataTable();
+                            oTable.draw();
                         }
                         else {
                             toastr.error("Something Wrong..!");

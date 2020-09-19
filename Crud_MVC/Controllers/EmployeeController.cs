@@ -111,9 +111,9 @@ namespace Crud_MVC.Controllers
                 }
                     
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                throw ex;
             }
             
         }
