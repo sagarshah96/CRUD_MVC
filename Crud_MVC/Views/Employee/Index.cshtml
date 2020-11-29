@@ -13,6 +13,9 @@
             <th>Office</th>
             <th>Age</th>
             <th>Salary</th>
+            <th>Country Name</th>
+            <th>State Name</th>
+            <th>City Name</th>
             <th></th>
         </tr>
     </thead>
@@ -50,7 +53,7 @@
 
 
     <script>
-        var Popup
+        var Popup = '';
 
         var _alphabetSearch = '';
 
@@ -80,6 +83,9 @@
                     { "data": "Office" },
                     { "data": "Age" },
                     { "data": "Salary" },
+                    { "data": "CountryName" },
+                    { "data": "StateName" },
+                    { "data": "CityName" },
                     {
                         "data": "EmployeeId", "render": function (data) {
                             return "<a class='btn btn-default btn-sm' onclick=PopupForm('@Url.Action("AddOrEdit","Employee")/" + data + "')><i class='fa fa-pencil'></i> Edit</a> <a class='btn btn-danger btn-sm' style='margin-left: 5px;'><i class='fa fa-trash'  onclick=Delete(" + data + ")> Delete </i></a>";

@@ -6,36 +6,87 @@
 @using (Ajax.BeginForm("AddOrEdit", "Employee", new AjaxOptions { HttpMethod = "POST", OnSuccess = "OnSuccess", OnFailure = "OnFailure" }))
 {
     @Html.AntiForgeryToken()
-        @Html.HiddenFor(m => m.EmployeeId)
-        <div class="form-group">
-            @Html.LabelFor(m => m.Name, new { @class = "control-label" })
-            @Html.TextBoxFor(m => m.Name, htmlAttributes: new { @class = "form-control" })
-            @Html.ValidationMessageFor(m => m.Name)
+    @Html.HiddenFor(m => m.EmployeeId)
+    <div class="form-group">
+        @Html.LabelFor(m => m.Name, new { @class = "control-label" })
+        @Html.TextBoxFor(m => m.Name, htmlAttributes: new { @class = "form-control" })
+        @Html.ValidationMessageFor(m => m.Name)
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.Position, new { @class = "control-label" })
+        @Html.TextBoxFor(m => m.Position, htmlAttributes: new { @class = "form-control" })
+        @Html.ValidationMessageFor(m => m.Position)
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.Office, new { @class = "control-label" })
+        @Html.TextBoxFor(m => m.Office, htmlAttributes: new { @class = "form-control" })
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.Age, new { @class = "control-label" })
+        @Html.TextBoxFor(m => m.Age, htmlAttributes: new { @class = "form-control", @type = "number" })
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.Salary, new { @class = "control-label" })
+        <div class="input-group">
+            <span class="input-group-addon">$</span>
+            @Html.TextBoxFor(m => m.Salary, htmlAttributes: new { @class = "form-control", @type = "number" })
         </div>
-        <div class="form-group">
-            @Html.LabelFor(m => m.Position, new { @class = "control-label" })
-            @Html.TextBoxFor(m => m.Position, htmlAttributes: new { @class = "form-control" })
-            @Html.ValidationMessageFor(m => m.Position)
-        </div>
-        <div class="form-group">
-            @Html.LabelFor(m => m.Office, new { @class = "control-label" })
-            @Html.TextBoxFor(m => m.Office, htmlAttributes: new { @class = "form-control" })
-        </div>
-        <div class="form-group">
-            @Html.LabelFor(m => m.Age, new { @class = "control-label" })
-            @Html.TextBoxFor(m => m.Age, htmlAttributes: new { @class = "form-control", @type = "number" })
-        </div>
-        <div class="form-group">
-            @Html.LabelFor(m => m.Salary, new { @class = "control-label" })
-            <div class="input-group">
-                <span class="input-group-addon">$</span>
-                @Html.TextBoxFor(m => m.Salary, htmlAttributes: new { @class = "form-control", @type = "number" })
-            </div>
-        </div>
-        <div class="form-group">
-            <input type="submit" value="Submit" class="btn btn-success" />
-            <input type="reset" value="Reset" class="btn" />
-        </div>
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.Country, new { @class = "control-label" })
+        @Html.DropDownListFor(m => m.CountryId, ViewBag.Country as SelectList, "Select country", new { @class = "form-control", id = "ddCountry" })
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.State, new { @class = "control-label" })
+        @Html.DropDownListFor(m => m.StateId, new SelectList(Enumerable.Empty<SelectListItem>()), "Select State", new { @class = "form-control", id = "ddState" })
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.City, new { @class = "control-label" })
+        @Html.DropDownListFor(m => m.CityId, new SelectList(Enumerable.Empty<SelectListItem>()), "Select City", new { @class = "form-control", id = "ddCity" })
+
+    </div>
+    <div class="form-group">
+        <input type="submit" value="Submit" class="btn btn-success" />
+        <input type="reset" value="Reset" class="btn" />
+    </div>
 
 }
 
+<script>
+    $(document).ready(function () {
+        $("#ddCountry").change(function () {
+            var Cnid = $(this).val();
+            $("#ddState").empty();
+            $.ajax({
+                url: '/Employee/GetState',
+                type: 'GET',
+                datatype: 'JSON',
+                data: { CountryId: Cnid },
+                success: function (result) {                    
+                    $('#ddState').append($('<option>Select State</option>'));
+                    $.each(result, function (i, item) {
+                        $('#ddState').append($('<option></option>').val(item.Value).html(item.Text));
+                    });
+                }
+            });
+        });
+
+        $("#ddState").change(function () {
+            var Stid = $(this).val();
+            $("#ddCity").empty();
+            $.ajax({
+                url: '/Employee/GetCity',
+                type: 'GET',
+                datatype: 'JSON',
+                data: { StateId: Stid },
+                success: function (result) {
+                    $('#ddCity').append($('<option>Select City</option>'));
+                    $.each(result, function (i, item) {
+                        $('#ddCity').append($('<option></option>').val(item.Value).html(item.Text));
+                    });
+                }
+            });
+        });
+    });
+
+</script>

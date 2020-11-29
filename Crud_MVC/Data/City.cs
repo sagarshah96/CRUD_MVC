@@ -12,20 +12,20 @@ namespace Crud_MVC.Data
     using System;
     using System.Collections.Generic;
     
-    public partial class Employee
+    public partial class City
     {
-        public int EmployeeId { get; set; }
-        public string Name { get; set; }
-        public string Position { get; set; }
-        public string Office { get; set; }
-        public Nullable<int> Age { get; set; }
-        public Nullable<int> Salary { get; set; }
-        public Nullable<int> CountryId { get; set; }
-        public Nullable<int> StateId { get; set; }
-        public Nullable<int> CityId { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public City()
+        {
+            this.Employees = new HashSet<Employee>();
+        }
     
-        public virtual City City { get; set; }
-        public virtual Country Country { get; set; }
+        public int CityId { get; set; }
+        public string CityName { get; set; }
+        public Nullable<int> StateId { get; set; }
+    
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Employee> Employees { get; set; }
         public virtual State State { get; set; }
     }
 }
